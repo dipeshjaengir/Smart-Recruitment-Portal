@@ -60,7 +60,7 @@ MONGODB_URI=mongodb://127.0.0.1:27017/smart_recruitment_portal
 ```
 
 #### Run Database Seeder
-Preload predefined technical skills, hiring categories, and the initial Administrator account (`admin@smartrecruit.com` / `adminpassword`):
+Preload predefined technical skills, hiring categories, and the initial Administrator account
 ```bash
 npm run seed
 ```
@@ -89,8 +89,3 @@ The web portal will boot locally at `http://localhost:5173`.
 ---
 
 ## 🔐 Credentials for Development
-- **Default Admin Account**:
-  - Email: `admin@smartrecruit.com`
-  - Password: `adminpassword`
-- **Master OTP Bypass**:
-  - If SMTP credentials are left blank in `.env`, verify emails during candidate or recruiter registration using the bypass code: `123456`.
