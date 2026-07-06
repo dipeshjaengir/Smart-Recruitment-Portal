@@ -155,8 +155,8 @@ export const ProfilePage = () => {
               <div className="w-full h-full rounded-full bg-brandIndigo flex items-center justify-center font-bold text-white text-3xl uppercase overflow-hidden shadow-neonIndigo border-2 border-indigo-500/20">
                 {profile?.profileImageUrl || profile?.companyLogo ? (
                   <img 
-                    src={profile.profileImageUrl || profile.companyLogo} 
-                    alt="profile" 
+                    src={(profile.profileImageUrl || profile.companyLogo).startsWith('http') ? (profile.profileImageUrl || profile.companyLogo) : `${BACKEND_URL}${profile.profileImageUrl || profile.companyLogo}`} 
+                    alt="" 
                     className="w-full h-full object-cover"
                   />
                 ) : (

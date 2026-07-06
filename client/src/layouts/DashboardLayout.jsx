@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logout, fetchCurrentUser } from '../redux/slices/authSlice';
 import { fetchNotifications, markNotificationRead } from '../redux/slices/notificationSlice';
 import { useTheme } from '../context/ThemeContext';
+import { BACKEND_URL } from '../services/api';
 import { 
   FiHome, FiUser, FiBriefcase, FiFileText, FiCalendar, FiBell, FiSettings, 
   FiLogOut, FiSun, FiMoon, FiMenu, FiX, FiLayers, FiActivity, FiUsers, FiSliders
@@ -115,7 +116,11 @@ export const DashboardLayout = ({ children }) => {
           <div className="flex items-center gap-3 px-2 py-3 rounded-xl bg-slate-200/20 dark:bg-slate-800/20 border border-indigo-500/5 mb-3">
             <div className="w-10 h-10 rounded-full bg-brandIndigo flex items-center justify-center font-bold text-white uppercase overflow-hidden shadow-neonIndigo">
               {profile?.profileImageUrl || profile?.companyLogo ? (
-                <img src={profile.profileImageUrl || profile.companyLogo} alt="avatar" className="w-full h-full object-cover" />
+                <img 
+                  src={(profile.profileImageUrl || profile.companyLogo).startsWith('http') ? (profile.profileImageUrl || profile.companyLogo) : `${BACKEND_URL}${profile.profileImageUrl || profile.companyLogo}`} 
+                  alt="" 
+                  className="w-full h-full object-cover rounded-full" 
+                />
               ) : (
                 profile?.name?.charAt(0) || user?.email?.charAt(0) || 'U'
               )}
@@ -209,7 +214,11 @@ export const DashboardLayout = ({ children }) => {
               <span className="hidden md:inline font-medium text-sm">{profile?.name || 'Portal User'}</span>
               <div className="w-8 h-8 rounded-full bg-brandIndigo flex items-center justify-center text-xs font-bold text-white shadow-neonIndigo">
                 {profile?.profileImageUrl || profile?.companyLogo ? (
-                  <img src={profile.profileImageUrl || profile.companyLogo} alt="avatar" className="w-full h-full object-cover rounded-full" />
+                  <img 
+                    src={(profile.profileImageUrl || profile.companyLogo).startsWith('http') ? (profile.profileImageUrl || profile.companyLogo) : `${BACKEND_URL}${profile.profileImageUrl || profile.companyLogo}`} 
+                    alt="" 
+                    className="w-full h-full object-cover rounded-full" 
+                  />
                 ) : (
                   profile?.name?.charAt(0) || 'U'
                 )}

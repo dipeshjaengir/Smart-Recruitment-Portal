@@ -7,7 +7,7 @@ import { Button } from '../components/Button';
 import { Modal } from '../components/Modal';
 import { fetchJobApplications, updateApplicationStatus } from '../redux/slices/applicationSlice';
 import { fetchJobById } from '../redux/slices/jobSlice';
-import api, { API_URL } from '../services/api';
+import api, { API_URL, BACKEND_URL } from '../services/api';
 import { 
   FiFileText, FiCalendar, FiArrowLeft, FiCheckCircle, FiXCircle, FiTrendingUp 
 } from 'react-icons/fi';
@@ -141,7 +141,7 @@ export const ApplicantsPage = () => {
                 <td className="px-6 py-4">
                   <div className="flex gap-2">
                     <a
-                      href={app.resumeUrl}
+                      href={app.resumeUrl.startsWith('http') ? app.resumeUrl : `${BACKEND_URL}${app.resumeUrl}`}
                       target="_blank"
                       rel="noreferrer"
                       className="p-1.5 rounded bg-slate-900 border border-slate-700 hover:bg-slate-800 text-slate-300 transition-all text-xs"
