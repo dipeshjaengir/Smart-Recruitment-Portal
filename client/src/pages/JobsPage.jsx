@@ -5,9 +5,9 @@ import { MainLayout } from '../layouts/MainLayout';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { fetchJobs } from '../redux/slices/jobSlice';
-import api from '../services/api';
+import api, { API_URL, formatSalary } from '../services/api';
 import { 
-  FiSearch, FiMapPin, FiDollarSign, FiFilter, FiBookmark, 
+  FiSearch, FiMapPin, FiCreditCard, FiFilter, FiBookmark, 
   FiChevronLeft, FiChevronRight, FiBriefcase 
 } from 'react-icons/fi';
 import { toast } from 'react-hot-toast';
@@ -202,9 +202,9 @@ export const JobsPage = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Min Salary ($)</label>
+              <label className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Min Salary (₹)</label>
               <div className="relative">
-                <FiDollarSign className="absolute left-3 top-3 text-slate-400 text-xs" />
+                <FiCreditCard className="absolute left-3 top-3 text-slate-400 text-xs" />
                 <input
                   type="number"
                   placeholder="e.g. 50000"
@@ -277,7 +277,7 @@ export const JobsPage = () => {
 
                     <div className="flex items-center justify-between border-t border-indigo-500/5 pt-4">
                       <span className="text-xs font-semibold text-slate-300">
-                        ${job.salaryMin.toLocaleString()} - ${job.salaryMax.toLocaleString()} / yr
+                        {formatSalary(job.salaryMin)} - {formatSalary(job.salaryMax)} / yr
                       </span>
                       <Link to={`/jobs/${job._id}`} className="text-xs font-bold text-brandIndigo flex items-center gap-1 hover:underline">
                         <span>Details</span>

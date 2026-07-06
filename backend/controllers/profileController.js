@@ -15,6 +15,31 @@ const getFileUrl = (file, subfolder) => {
   return `/uploads/${subfolder}/${file.filename}`;
 };
 
+const uploadToBackupStorage = async (file, subfolder) => {
+  const filePath = file.path;
+  try {
+    const fileBuffer = fs.readFileSync(filePath);
+    const blob = new Blob([fileBuffer]);
+    const fd = new FormData();
+    fd.append('reqtype', 'fileupload');
+    fd.append('fileToUpload', blob, path.basename(filePath));
+
+    const response = await fetch('https://catbox.moe/user/api.php', {
+      method: 'POST',
+      body: fd
+    });
+    
+    if (response.ok) {
+      const url = await response.text();
+      try { fs.unlinkSync(filePath); } catch (e) {}
+      return url.trim();
+    }
+  } catch (err) {
+    console.error('Persistent backup upload failed, falling back to local:', err);
+  }
+  return `/uploads/${subfolder}/${file.filename}`;
+};
+
 exports.getProfile = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
@@ -122,13 +147,13 @@ exports.uploadResume = async (req, res, next) => {
           resource_type: 'raw'
         });
         uploadedUrl = uploadResult.secure_url;
-        fs.unlinkSync(filePath);
+        try { fs.unlinkSync(filePath); } catch (e) {}
       } catch (err) {
-        console.error('Cloudinary upload failure, using local backup url:', err);
-        uploadedUrl = getFileUrl(req.file, 'resumes');
+        console.error('Cloudinary upload failure, trying persistent backup:', err);
+        uploadedUrl = await uploadToBackupStorage(req.file, 'resumes');
       }
     } else {
-      uploadedUrl = getFileUrl(req.file, 'resumes');
+      uploadedUrl = await uploadToBackupStorage(req.file, 'resumes');
     }
 
     candidate.resumeUrl = uploadedUrl;
@@ -199,13 +224,13 @@ exports.uploadProfileImage = async (req, res, next) => {
           folder: 'profiles'
         });
         profileImageUrl = uploadResult.secure_url;
-        fs.unlinkSync(filePath);
+        try { fs.unlinkSync(filePath); } catch (e) {}
       } catch (err) {
-        console.error('Cloudinary image upload failure, using local backup:', err);
-        profileImageUrl = getFileUrl(req.file, 'profiles');
+        console.error('Cloudinary image upload failure, using backup storage:', err);
+        profileImageUrl = await uploadToBackupStorage(req.file, 'profiles');
       }
     } else {
-      profileImageUrl = getFileUrl(req.file, 'profiles');
+      profileImageUrl = await uploadToBackupStorage(req.file, 'profiles');
     }
 
     if (user.role === 'candidate') {

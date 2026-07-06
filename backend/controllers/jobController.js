@@ -292,7 +292,13 @@ exports.getJobs = async (req, res, next) => {
         }
       ];
 
-      await Job.insertMany(demoJobs);
+      const inrJobs = demoJobs.map(job => ({
+        ...job,
+        salaryMin: job.salaryMin * 10,
+        salaryMax: job.salaryMax * 10
+      }));
+
+      await Job.insertMany(inrJobs);
     }
 
     const {

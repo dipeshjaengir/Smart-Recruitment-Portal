@@ -6,8 +6,9 @@ import { Button } from '../components/Button';
 import { Modal } from '../components/Modal';
 import { fetchJobById, clearSelectedJob } from '../redux/slices/jobSlice';
 import { submitJobApplication } from '../redux/slices/applicationSlice';
-import { FiMapPin, FiCalendar, FiDollarSign, FiClock, FiGrid, FiArrowLeft, FiCheck } from 'react-icons/fi';
+import { FiMapPin, FiCalendar, FiCreditCard, FiClock, FiGrid, FiArrowLeft, FiCheck } from 'react-icons/fi';
 import { toast } from 'react-hot-toast';
+import { formatSalary } from '../services/api';
 
 export const JobDetailsPage = () => {
   const { id } = useParams();
@@ -91,10 +92,10 @@ export const JobDetailsPage = () => {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-indigo-500/10 text-brandIndigo"><FiDollarSign size={16} /></div>
+              <div className="p-2 rounded-lg bg-indigo-500/10 text-brandIndigo"><FiCreditCard size={16} /></div>
               <div>
                 <p className="text-slate-400 font-medium">Annual Salary</p>
-                <p className="font-bold text-slate-200">${selectedJob.salaryMin.toLocaleString()} - ${selectedJob.salaryMax.toLocaleString()}</p>
+                <p className="font-bold text-slate-200">{formatSalary(selectedJob.salaryMin)} - {formatSalary(selectedJob.salaryMax)}</p>
               </div>
             </div>
 
