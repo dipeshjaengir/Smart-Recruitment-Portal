@@ -88,8 +88,7 @@ exports.getJobApplications = async (req, res, next) => {
     const applications = await Application.find({ job: req.params.jobId })
       .populate({
         path: 'candidate',
-        select: 'email',
-        populate: { path: 'user', select: 'email' }
+        select: 'email'
       })
       .sort({ 'aiScore.overall': -1 });
 

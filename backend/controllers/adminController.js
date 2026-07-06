@@ -62,18 +62,44 @@ exports.unblockUser = async (req, res, next) => {
 
 exports.getDashboardAnalytics = async (req, res, next) => {
   try {
+    const mongoose = require('mongoose');
+    let queryJobs = {};
+    let queryApps = {};
+
+    if (req.user.role === 'recruiter') {
+      queryJobs = { recruiter: req.user.id };
+      const recruiterJobs = await Job.find({ recruiter: req.user.id }).select('_id');
+      const recruiterJobIds = recruiterJobs.map(j => j._id);
+      queryApps = { job: { $in: recruiterJobIds } };
+    }
+
     const totalCandidates = await User.countDocuments({ role: 'candidate' });
     const totalRecruiters = await User.countDocuments({ role: 'recruiter' });
-    const totalJobs = await Job.countDocuments();
-    const totalApplications = await Application.countDocuments();
+    const totalJobs = await Job.countDocuments(queryJobs);
+    const totalApplications = await Application.countDocuments(queryApps);
 
-    const applicationStatusAggregation = await Application.aggregate([
-      { $group: { _id: '$status', count: { $sum: 1 } } }
-    ]);
+    let applicationStatusAggregation;
+    let jobCategoryAggregation;
 
-    const jobCategoryAggregation = await Job.aggregate([
-      { $group: { _id: '$category', count: { $sum: 1 } } }
-    ]);
+    if (req.user.role === 'recruiter') {
+      const recruiterJobs = await Job.find({ recruiter: req.user.id }).select('_id');
+      const recruiterJobIds = recruiterJobs.map(j => j._id);
+      applicationStatusAggregation = await Application.aggregate([
+        { $match: { job: { $in: recruiterJobIds } } },
+        { $group: { _id: '$status', count: { $sum: 1 } } }
+      ]);
+      jobCategoryAggregation = await Job.aggregate([
+        { $match: { recruiter: new mongoose.Types.ObjectId(req.user.id) } },
+        { $group: { _id: '$category', count: { $sum: 1 } } }
+      ]);
+    } else {
+      applicationStatusAggregation = await Application.aggregate([
+        { $group: { _id: '$status', count: { $sum: 1 } } }
+      ]);
+      jobCategoryAggregation = await Job.aggregate([
+        { $group: { _id: '$category', count: { $sum: 1 } } }
+      ]);
+    }
 
     let settings = await Setting.findOne();
     if (!settings) {
