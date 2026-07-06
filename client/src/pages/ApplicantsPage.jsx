@@ -1,5 +1,3 @@
-const API_URL = 'http://localhost:5000/api';
-
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,7 +7,7 @@ import { Button } from '../components/Button';
 import { Modal } from '../components/Modal';
 import { fetchJobApplications, updateApplicationStatus } from '../redux/slices/applicationSlice';
 import { fetchJobById } from '../redux/slices/jobSlice';
-import api from '../services/api';
+import api, { API_URL } from '../services/api';
 import { 
   FiFileText, FiCalendar, FiArrowLeft, FiCheckCircle, FiXCircle, FiTrendingUp 
 } from 'react-icons/fi';

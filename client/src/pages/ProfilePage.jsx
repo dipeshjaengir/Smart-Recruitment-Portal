@@ -5,7 +5,7 @@ import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 import { updateProfileLocally } from '../redux/slices/authSlice';
-import api from '../services/api';
+import api, { BACKEND_URL } from '../services/api';
 import { 
   FiFileText, FiUploadCloud, FiPlus, FiCpu 
 } from 'react-icons/fi';
@@ -177,7 +177,7 @@ export const ProfilePage = () => {
                 </div>
                 {profile?.resumeUrl && (
                   <a 
-                    href={profile.resumeUrl.startsWith('http') ? profile.resumeUrl : `http://localhost:5000${profile.resumeUrl}`} 
+                    href={profile.resumeUrl.startsWith('http') ? profile.resumeUrl : `${BACKEND_URL}${profile.resumeUrl}`} 
                     target="_blank" 
                     rel="noreferrer" 
                     className="flex items-center justify-center gap-1.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 font-semibold hover:bg-slate-800 transition-all block text-center"
