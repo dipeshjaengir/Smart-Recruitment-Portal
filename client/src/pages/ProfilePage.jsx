@@ -129,6 +129,17 @@ export const ProfilePage = () => {
     setNewSkill('');
   };
 
+  const handleSkillKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (!newSkill.trim()) return;
+      if (!skills.includes(newSkill.trim())) {
+        setSkills([...skills, newSkill.trim()]);
+      }
+      setNewSkill('');
+    }
+  };
+
   const handleRemoveSkill = (skillToRemove) => {
     setSkills(skills.filter(s => s !== skillToRemove));
   };
@@ -258,6 +269,7 @@ export const ProfilePage = () => {
                     <textarea
                       value={bio}
                       onChange={(e) => setBio(e.target.value)}
+                      placeholder="Tell us about yourself, your career goals, and technical achievements..."
                       className="w-full h-24 glass-input dark:bg-slate-900/60 dark:border-indigo-500/10 text-sm p-3"
                     />
                   </div>
@@ -267,20 +279,21 @@ export const ProfilePage = () => {
                     <div className="flex gap-2">
                       <input
                         type="text"
-                        placeholder="Add skill (e.g. Next.js)"
+                        placeholder="Add skill (e.g. Next.js) and press Enter"
                         value={newSkill}
                         onChange={(e) => setNewSkill(e.target.value)}
+                        onKeyDown={handleSkillKeyDown}
                         className="flex-grow glass-input dark:bg-slate-900/60 dark:border-indigo-500/10 text-xs px-3 py-2"
                       />
-                      <Button onClick={handleAddSkill} className="py-2.5 px-4"><FiPlus /></Button>
+                      <Button type="button" onClick={handleAddSkill} className="py-2.5 px-4"><FiPlus /></Button>
                     </div>
                     <div className="flex flex-wrap gap-2 pt-2">
                       {skills.map(s => (
                         <span 
                           key={s} 
-                          className="text-xs px-3 py-1 rounded bg-brandIndigo/10 text-slate-200 border border-indigo-500/25 flex items-center gap-1.5"
+                          className="text-xs px-3 py-1 rounded bg-brandIndigo/10 text-slate-200 border border-indigo-500/25 flex items-center gap-1.5 max-w-full truncate"
                         >
-                          <span>{s}</span>
+                          <span className="truncate">{s}</span>
                           <button 
                             type="button" 
                             onClick={() => handleRemoveSkill(s)} 

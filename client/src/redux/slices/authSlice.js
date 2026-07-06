@@ -105,7 +105,7 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.isRegistered = true;
+        state.isRegistered = false; // DEMO: bypassed for direct redirect
         state.registeredEmail = action.meta.arg.email;
       })
       .addCase(registerUser.rejected, (state, action) => {

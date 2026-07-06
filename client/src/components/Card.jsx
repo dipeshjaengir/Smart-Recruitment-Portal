@@ -11,7 +11,7 @@ export const Card = ({
     <div
       onClick={onClick}
       className={`glass-panel p-6 ${
-        hoverEffect ? 'hover:translate-y-[-4px] hover:border-brandIndigo/40 hover:shadow-neonIndigo transition-all duration-350 cursor-pointer' : ''
+        hoverEffect ? 'hover:translate-y-[-4px] hover:border-brandIndigo/40 hover:shadow-md dark:hover:shadow-neonIndigo transition-all duration-350 cursor-pointer' : ''
       } ${className}`}
       {...props}
     >

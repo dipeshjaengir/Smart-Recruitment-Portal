@@ -42,6 +42,259 @@ exports.createJob = async (req, res, next) => {
 
 exports.getJobs = async (req, res, next) => {
   try {
+    let totalCount = await Job.countDocuments();
+    if (totalCount === 0) {
+      const User = require('../models/User');
+      let recruiterUser = await User.findOne({ role: 'recruiter' });
+      if (!recruiterUser) {
+        recruiterUser = await User.findOne({ role: 'admin' });
+      }
+      if (!recruiterUser) {
+        recruiterUser = await User.create({
+          email: 'recruiter.demo@smartrecruit.com',
+          password: 'password123',
+          role: 'recruiter',
+          isVerified: true
+        });
+        const Recruiter = require('../models/Recruiter');
+        await Recruiter.create({
+          user: recruiterUser._id,
+          name: 'Demo Hiring Manager',
+          companyName: 'Innovative Tech Corp'
+        });
+      }
+
+      const demoJobs = [
+        {
+          recruiter: recruiterUser._id,
+          companyName: 'Google',
+          title: 'Senior Frontend Engineer',
+          description: 'Join the Google Search frontend team. Develop responsive interfaces using React, Next.js, and TypeScript. Scale global platforms.',
+          category: 'Frontend Developer',
+          skillsRequired: ['React.js', 'Next.js', 'TypeScript', 'HTML', 'CSS', 'JavaScript'],
+          experienceRequired: 5,
+          educationRequired: 'Bachelor of Science',
+          salaryMin: 120000,
+          salaryMax: 180000,
+          location: 'Mountain View, CA',
+          workMode: 'hybrid',
+          jobType: 'full-time'
+        },
+        {
+          recruiter: recruiterUser._id,
+          companyName: 'Microsoft',
+          title: 'Software Developer II (Backend)',
+          description: 'Design and optimize core cloud features in Azure. Build microservices using Java, C++, and PostgreSQL. Develop secure APIs.',
+          category: 'Backend Developer',
+          skillsRequired: ['Java', 'C++', 'PostgreSQL', 'Docker', 'Kubernetes', 'REST API'],
+          experienceRequired: 3,
+          educationRequired: 'Bachelor of Science',
+          salaryMin: 110000,
+          salaryMax: 160000,
+          location: 'Redmond, WA',
+          workMode: 'hybrid',
+          jobType: 'full-time'
+        },
+        {
+          recruiter: recruiterUser._id,
+          companyName: 'Amazon',
+          title: 'DevOps / Cloud Specialist',
+          description: 'Manage production services in AWS. Automate CI/CD pipelines using Terraform, Jenkins, and Kubernetes. Optimize cloud security.',
+          category: 'DevOps Engineer',
+          skillsRequired: ['AWS', 'Terraform', 'CI/CD', 'Jenkins', 'Docker', 'Kubernetes', 'Linux'],
+          experienceRequired: 4,
+          educationRequired: 'Bachelor of Science',
+          salaryMin: 130000,
+          salaryMax: 175000,
+          location: 'Seattle, WA',
+          workMode: 'remote',
+          jobType: 'full-time'
+        },
+        {
+          recruiter: recruiterUser._id,
+          companyName: 'Meta',
+          title: 'Full Stack MERN Developer',
+          description: 'Build features for Instagram Web. Work across React, Node.js, Express, and MongoDB. Secure OAuth authentication layers.',
+          category: 'MERN Stack Developer',
+          skillsRequired: ['React.js', 'Node.js', 'Express.js', 'MongoDB', 'JavaScript', 'JWT', 'OAuth'],
+          experienceRequired: 3,
+          educationRequired: 'Bachelor of Science',
+          salaryMin: 140000,
+          salaryMax: 190000,
+          location: 'Menlo Park, CA',
+          workMode: 'hybrid',
+          jobType: 'full-time'
+        },
+        {
+          recruiter: recruiterUser._id,
+          companyName: 'Adobe',
+          title: 'Java Platform Developer',
+          description: 'Work on Photoshop cloud integrations. Implement microservices, write clean OOP, and maintain high performance MySQL clusters.',
+          category: 'Java Developer',
+          skillsRequired: ['Java', 'MySQL', 'OOP', 'REST API', 'Git'],
+          experienceRequired: 3,
+          educationRequired: 'Bachelor of Science',
+          salaryMin: 105000,
+          salaryMax: 150000,
+          location: 'San Jose, CA',
+          workMode: 'onsite',
+          jobType: 'full-time'
+        },
+        {
+          recruiter: recruiterUser._id,
+          companyName: 'Netflix',
+          title: 'Data Scientist (Machine Learning)',
+          description: 'Optimize recommendation algorithms. Train models in Python using TensorFlow, PyTorch, and large dataset packages.',
+          category: 'Data Scientist',
+          skillsRequired: ['Python', 'Machine Learning', 'TensorFlow', 'PyTorch', 'Data Structures & Algorithms'],
+          experienceRequired: 5,
+          educationRequired: 'Master of Science',
+          salaryMin: 150000,
+          salaryMax: 220000,
+          location: 'Los Gatos, CA',
+          workMode: 'remote',
+          jobType: 'full-time'
+        },
+        {
+          recruiter: recruiterUser._id,
+          companyName: 'TCS',
+          title: 'Full Stack Developer',
+          description: 'Collaborate with enterprise banking clients. Support legacy and modern tech stacks (Java, React, SQL databases).',
+          category: 'Full Stack Developer',
+          skillsRequired: ['React.js', 'Java', 'MySQL', 'HTML', 'CSS', 'JavaScript'],
+          experienceRequired: 2,
+          educationRequired: 'Bachelor of Science',
+          salaryMin: 65000,
+          salaryMax: 90000,
+          location: 'Dallas, TX',
+          workMode: 'hybrid',
+          jobType: 'full-time'
+        },
+        {
+          recruiter: recruiterUser._id,
+          companyName: 'Infosys',
+          title: 'React UI Specialist',
+          description: 'Design interactive, accessible portals. Maintain state with Redux. Optimize code structures for fast rendering.',
+          category: 'React Developer',
+          skillsRequired: ['React.js', 'Redux', 'Bootstrap', 'Git', 'HTML', 'CSS'],
+          experienceRequired: 2,
+          educationRequired: 'Bachelor of Science',
+          salaryMin: 70000,
+          salaryMax: 95000,
+          location: 'Chicago, IL',
+          workMode: 'onsite',
+          jobType: 'full-time'
+        },
+        {
+          recruiter: recruiterUser._id,
+          companyName: 'Wipro',
+          title: 'Junior Cloud Developer',
+          description: 'Deploy web apps to Azure and GCP. Write serverless scripts. Troubleshoot networking configurations.',
+          category: 'Cloud Engineer',
+          skillsRequired: ['Azure', 'GCP', 'REST API', 'Linux', 'Git'],
+          experienceRequired: 1,
+          educationRequired: 'Bachelor of Science',
+          salaryMin: 60000,
+          salaryMax: 85000,
+          location: 'Boston, MA',
+          workMode: 'hybrid',
+          jobType: 'full-time'
+        },
+        {
+          recruiter: recruiterUser._id,
+          companyName: 'Oracle',
+          title: 'Database & DBMS Engineer',
+          description: 'Support cloud datastores. Design indexing, SQL queries optimization, and maintain data replication streams.',
+          category: 'Backend Developer',
+          skillsRequired: ['SQL', 'DBMS', 'OOP', 'PostgreSQL', 'Linux'],
+          experienceRequired: 4,
+          educationRequired: 'Bachelor of Science',
+          salaryMin: 115000,
+          salaryMax: 165000,
+          location: 'Austin, TX',
+          workMode: 'onsite',
+          jobType: 'full-time'
+        },
+        {
+          recruiter: recruiterUser._id,
+          companyName: 'Accenture',
+          title: 'Security Analyst',
+          description: 'Perform system penetration testing. Audit software systems, firewall rule lists, and secure OAuth endpoints.',
+          category: 'Cyber Security Analyst',
+          skillsRequired: ['Linux', 'OAuth', 'JWT', 'Computer Networks'],
+          experienceRequired: 3,
+          educationRequired: 'Bachelor of Science',
+          salaryMin: 90000,
+          salaryMax: 135000,
+          location: 'Atlanta, GA',
+          workMode: 'remote',
+          jobType: 'full-time'
+        },
+        {
+          recruiter: recruiterUser._id,
+          companyName: 'Adobe',
+          title: 'UI/UX Interactive Designer',
+          description: 'Create premium system graphics. Design wireframes, user personas, and map visual workflows.',
+          category: 'UI/UX Designer',
+          skillsRequired: ['UI/UX', 'HTML', 'CSS', 'Tailwind CSS', 'Figma'],
+          experienceRequired: 2,
+          educationRequired: 'Bachelor of Fine Arts',
+          salaryMin: 80000,
+          salaryMax: 120000,
+          location: 'New York, NY',
+          workMode: 'remote',
+          jobType: 'full-time'
+        },
+        {
+          recruiter: recruiterUser._id,
+          companyName: 'IBM',
+          title: 'Python Software Engineer',
+          description: 'Write script pipelines, analyze metrics, and support AI backend architectures.',
+          category: 'Python Developer',
+          skillsRequired: ['Python', 'Data Structures & Algorithms', 'Linux', 'REST API'],
+          experienceRequired: 2,
+          educationRequired: 'Bachelor of Science',
+          salaryMin: 95000,
+          salaryMax: 140000,
+          location: 'San Jose, CA',
+          workMode: 'onsite',
+          jobType: 'full-time'
+        },
+        {
+          recruiter: recruiterUser._id,
+          companyName: 'Meta',
+          title: 'Mobile React Native Developer',
+          description: 'Deploy hybrid candidates to Android and iOS App Stores. Maintain fast local storage integrations.',
+          category: 'Mobile App Developer',
+          skillsRequired: ['React.js', 'Android', 'iOS', 'Git', 'REST API'],
+          experienceRequired: 3,
+          educationRequired: 'Bachelor of Science',
+          salaryMin: 125000,
+          salaryMax: 170000,
+          location: 'Seattle, WA',
+          workMode: 'hybrid',
+          jobType: 'full-time'
+        },
+        {
+          recruiter: recruiterUser._id,
+          companyName: 'Google',
+          title: 'QA / Automation Test Engineer',
+          description: 'Write unit tests, automated integration flows, and run visual browser automation checkups.',
+          category: 'QA/Test Engineer',
+          skillsRequired: ['JavaScript', 'Git', 'CI/CD', 'Linux'],
+          experienceRequired: 2,
+          educationRequired: 'Bachelor of Science',
+          salaryMin: 90000,
+          salaryMax: 130000,
+          location: 'Chicago, IL',
+          workMode: 'hybrid',
+          jobType: 'full-time'
+        }
+      ];
+
+      await Job.insertMany(demoJobs);
+    }
+
     const {
       search,
       category,

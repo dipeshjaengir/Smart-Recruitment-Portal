@@ -44,7 +44,8 @@ export const RegisterPage = () => {
     
     const resultAction = await dispatch(registerUser(signUpPayload));
     if (registerUser.fulfilled.match(resultAction)) {
-      toast.success('Registration successful! Verification code sent.');
+      toast.success('Registration successful! Redirecting to login...');
+      navigate('/login');
     } else {
       toast.error(resultAction.payload || 'Registration failed');
     }
