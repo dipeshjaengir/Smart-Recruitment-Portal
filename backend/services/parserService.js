@@ -148,8 +148,19 @@ const parseResumePDF = async (filePath) => {
       rawText: text
     };
   } catch (error) {
-    console.error('Error parsing resume PDF:', error);
-    throw error;
+    console.error('Error parsing resume PDF, returning fallback details:', error);
+    return {
+      name: '',
+      email: '',
+      phone: '',
+      skills: [],
+      education: [],
+      experience: [],
+      projects: [],
+      certificates: [],
+      yearsOfExperience: 0,
+      rawText: 'Text extraction failed. Manual entry required.'
+    };
   }
 };
 
