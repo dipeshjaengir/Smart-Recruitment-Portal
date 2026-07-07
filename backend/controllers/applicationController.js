@@ -64,10 +64,11 @@ exports.applyJob = async (req, res, next) => {
       link: '/candidate/applications'
     });
 
+    const populatedApp = await Application.findById(application._id).populate('job');
     res.status(201).json({
       success: true,
       message: 'Application submitted successfully! AI analysis complete.',
-      application
+      application: populatedApp
     });
   } catch (error) {
     next(error);

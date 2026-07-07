@@ -2,6 +2,7 @@ const Job = require('../models/Job');
 const Candidate = require('../models/Candidate');
 const Recruiter = require('../models/Recruiter');
 const Notification = require('../models/Notification');
+const Application = require('../models/Application');
 
 exports.createJob = async (req, res, next) => {
   const { title, description, category, skillsRequired, experienceRequired, educationRequired, salaryMin, salaryMax, location, workMode, jobType } = req.body;
@@ -437,6 +438,7 @@ exports.deleteJob = async (req, res, next) => {
     }
 
     await Job.findByIdAndDelete(req.params.id);
+    await Application.deleteMany({ job: req.params.id });
 
     res.status(200).json({ success: true, message: 'Job listing deleted successfully.' });
   } catch (error) {

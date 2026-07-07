@@ -117,7 +117,7 @@ export const DashboardLayout = ({ children }) => {
             <div className="w-10 h-10 rounded-full bg-brandIndigo flex items-center justify-center font-bold text-white uppercase overflow-hidden shadow-neonIndigo">
               {profile?.profileImageUrl || profile?.companyLogo ? (
                 <img 
-                  src={(profile.profileImageUrl || profile.companyLogo).startsWith('http') ? (profile.profileImageUrl || profile.companyLogo) : `${BACKEND_URL}${profile.profileImageUrl || profile.companyLogo}`} 
+                  src={`${(profile.profileImageUrl || profile.companyLogo).startsWith('http') ? (profile.profileImageUrl || profile.companyLogo) : `${BACKEND_URL}${profile.profileImageUrl || profile.companyLogo}`}?t=${profile.updatedAt ? new Date(profile.updatedAt).getTime() : Date.now()}`} 
                   alt="" 
                   className="w-full h-full object-cover rounded-full" 
                 />
@@ -215,7 +215,7 @@ export const DashboardLayout = ({ children }) => {
               <div className="w-8 h-8 rounded-full bg-brandIndigo flex items-center justify-center text-xs font-bold text-white shadow-neonIndigo">
                 {profile?.profileImageUrl || profile?.companyLogo ? (
                   <img 
-                    src={(profile.profileImageUrl || profile.companyLogo).startsWith('http') ? (profile.profileImageUrl || profile.companyLogo) : `${BACKEND_URL}${profile.profileImageUrl || profile.companyLogo}`} 
+                    src={`${(profile.profileImageUrl || profile.companyLogo).startsWith('http') ? (profile.profileImageUrl || profile.companyLogo) : `${BACKEND_URL}${profile.profileImageUrl || profile.companyLogo}`}?t=${profile.updatedAt ? new Date(profile.updatedAt).getTime() : Date.now()}`} 
                     alt="" 
                     className="w-full h-full object-cover rounded-full" 
                   />

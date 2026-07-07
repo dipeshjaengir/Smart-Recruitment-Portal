@@ -155,7 +155,7 @@ export const ProfilePage = () => {
               <div className="w-full h-full rounded-full bg-brandIndigo flex items-center justify-center font-bold text-white text-3xl uppercase overflow-hidden shadow-neonIndigo border-2 border-indigo-500/20">
                 {profile?.profileImageUrl || profile?.companyLogo ? (
                   <img 
-                    src={(profile.profileImageUrl || profile.companyLogo).startsWith('http') ? (profile.profileImageUrl || profile.companyLogo) : `${BACKEND_URL}${profile.profileImageUrl || profile.companyLogo}`} 
+                    src={`${(profile.profileImageUrl || profile.companyLogo).startsWith('http') ? (profile.profileImageUrl || profile.companyLogo) : `${BACKEND_URL}${profile.profileImageUrl || profile.companyLogo}`}?t=${profile.updatedAt ? new Date(profile.updatedAt).getTime() : Date.now()}`} 
                     alt="" 
                     className="w-full h-full object-cover"
                   />
