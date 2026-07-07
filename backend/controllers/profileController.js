@@ -19,10 +19,10 @@ const uploadToBackupStorage = async (file, subfolder) => {
   const filePath = file.path;
   try {
     const fileBuffer = fs.readFileSync(filePath);
-    const blob = new Blob([fileBuffer]);
+    const fileObj = new File([fileBuffer], path.basename(filePath), { type: file.mimetype });
     const fd = new FormData();
     fd.append('reqtype', 'fileupload');
-    fd.append('fileToUpload', blob, path.basename(filePath));
+    fd.append('fileToUpload', fileObj);
 
     const response = await fetch('https://catbox.moe/user/api.php', {
       method: 'POST',
