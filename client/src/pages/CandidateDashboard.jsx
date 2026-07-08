@@ -42,6 +42,16 @@ export const CandidateDashboard = () => {
 
   const profilePercent = profile?.profileCompletion || 0;
 
+  const upcomingInterviews = interviews.filter(int => {
+    if (int.status !== 'scheduled') return false;
+    try {
+      const time = int.time && /^\d{2}:\d{2}$/.test(int.time) ? int.time : '00:00';
+      return new Date(`${int.date}T${time}`) >= new Date();
+    } catch (e) {
+      return true;
+    }
+  });
+
   return (
     <DashboardLayout>
       <div className="space-y-8">
@@ -158,14 +168,14 @@ export const CandidateDashboard = () => {
               
               {interviewsLoading ? (
                 <div className="py-6 text-center text-slate-400 text-xs">Loading calendar...</div>
-              ) : interviews.length === 0 ? (
+              ) : upcomingInterviews.length === 0 ? (
                 <div className="glass-panel p-6 text-center text-slate-400 border border-indigo-500/10 text-xs">
                   <FiClock className="mx-auto text-2xl mb-2 text-indigo-500/30" />
                   No upcoming virtual interviews.
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {interviews.slice(0, 3).map((int) => (
+                  {upcomingInterviews.slice(0, 3).map((int) => (
                     <Card key={int._id} hoverEffect={true} className="p-4 border border-indigo-500/10 flex flex-col justify-between">
                       <div>
                         <h4 className="font-bold text-sm truncate">{int.job?.title || 'Job Interview'}</h4>

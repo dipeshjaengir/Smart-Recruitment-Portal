@@ -92,28 +92,41 @@ export const JobsPage = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         
         <div className="mb-10 text-center md:text-left">
+          {user && user.role === 'candidate' && (
+            <div className="mb-6 flex justify-start">
+              <Link 
+                to="/candidate" 
+                className="inline-flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-brandIndigo transition-colors"
+              >
+                <FiChevronLeft className="text-sm" />
+                <span>Back to Dashboard</span>
+              </Link>
+            </div>
+          )}
           <h2 className="text-3xl font-extrabold text-gradient-cyan mb-2">Explore Opportunities</h2>
           <p className="text-slate-400 text-sm">Find software engineering positions scored directly by our AI engine</p>
 
           <form onSubmit={handleSearchSubmit} className="mt-8 flex flex-col md:flex-row gap-4 max-w-4xl">
-            <div className="flex-grow relative">
-              <FiSearch className="absolute left-4 top-3.5 text-slate-400" />
+            <div className="flex-grow relative col-span-2">
+              <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
               <input
                 type="text"
                 placeholder="Search job titles, descriptions, or companies..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 glass-input dark:bg-slate-900 border-indigo-500/10 focus:border-brandIndigo text-sm"
+                style={{ paddingLeft: '3rem' }}
+                className="w-full pr-4 py-3 glass-input dark:bg-slate-900 border-indigo-500/10 focus:border-brandIndigo text-sm"
               />
             </div>
             <div className="w-full md:w-60 relative">
-              <FiMapPin className="absolute left-4 top-3.5 text-slate-400" />
+              <FiMapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
               <input
                 type="text"
                 placeholder="City or remote..."
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 glass-input dark:bg-slate-900 border-indigo-500/10 focus:border-brandIndigo text-sm"
+                style={{ paddingLeft: '3rem' }}
+                className="w-full pr-4 py-3 glass-input dark:bg-slate-900 border-indigo-500/10 focus:border-brandIndigo text-sm"
               />
             </div>
             <Button type="submit" variant="violet" className="px-8 py-3">

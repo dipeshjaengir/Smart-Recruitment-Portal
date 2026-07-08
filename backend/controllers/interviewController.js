@@ -79,10 +79,20 @@ exports.scheduleInterview = async (req, res, next) => {
 
 exports.getCandidateInterviews = async (req, res, next) => {
   try {
-    const interviews = await Interview.find({ candidate: req.user.id })
+    const interviews = await Interview.find({ candidate: req.user.id }).populate('job recruiter');
+    const now = new Date();
+    for (const interview of interviews) {
+      const time = interview.time && /^\d{2}:\d{2}$/.test(interview.time) ? interview.time : '00:00';
+      const interviewDateTime = new Date(`${interview.date}T${time}`);
+      if (interviewDateTime < now && interview.status === 'scheduled') {
+        interview.status = 'completed';
+        await interview.save();
+      }
+    }
+    const sortedInterviews = await Interview.find({ candidate: req.user.id })
       .populate('job recruiter')
       .sort({ date: 1, time: 1 });
-    res.status(200).json({ success: true, count: interviews.length, interviews });
+    res.status(200).json({ success: true, count: sortedInterviews.length, interviews: sortedInterviews });
   } catch (error) {
     next(error);
   }
@@ -90,11 +100,21 @@ exports.getCandidateInterviews = async (req, res, next) => {
 
 exports.getRecruiterInterviews = async (req, res, next) => {
   try {
-    const interviews = await Interview.find({ recruiter: req.user.id })
+    const interviews = await Interview.find({ recruiter: req.user.id }).populate('job candidate');
+    const now = new Date();
+    for (const interview of interviews) {
+      const time = interview.time && /^\d{2}:\d{2}$/.test(interview.time) ? interview.time : '00:00';
+      const interviewDateTime = new Date(`${interview.date}T${time}`);
+      if (interviewDateTime < now && interview.status === 'scheduled') {
+        interview.status = 'completed';
+        await interview.save();
+      }
+    }
+    const sortedInterviews = await Interview.find({ recruiter: req.user.id })
       .populate('job candidate')
       .sort({ date: 1, time: 1 });
 
-    const formattedInterviews = await Promise.all(interviews.map(async (interview) => {
+    const formattedInterviews = await Promise.all(sortedInterviews.map(async (interview) => {
       const candidateProfile = await Candidate.findOne({ user: interview.candidate._id }).lean();
       return {
         ...interview.toObject(),
